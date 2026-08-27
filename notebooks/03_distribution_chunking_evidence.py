@@ -70,3 +70,8 @@ for _, row in qa.iterrows():
 print(f"Sin ningún chunk en esa página: {len(no_chunks)}")
 print(f"Coincide al normalizar espacios (falso negativo de formato): {len(fixed_by_normalizing)}")
 print(f"Sigue fallando de verdad: {len(real_fails)}")
+
+# Output:
+# Sin ningún chunk en esa página: 0
+# Coincide al normalizar espacios (falso negativo de formato): 20
+# Sigue fallando de verdad: 21

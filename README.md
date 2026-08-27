@@ -15,7 +15,7 @@ uv sync
 ## Status
 
 - [x] Day 1: data setup
-- [ ] Day 2: parsing & chunking
+- [x] Day 2: parsing & chunking
 - [ ] Day 3: embedding & indexing
 - [ ] Day 4: retrieval & generation
 - [ ] Day 5: API + UI
