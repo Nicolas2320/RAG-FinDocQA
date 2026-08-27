@@ -1,4 +1,4 @@
-# Docker — servicios locales
+# Docker: servicios locales
 
 Infraestructura local para no depender de servicios cloud (ni de API keys).
 
@@ -7,7 +7,7 @@ Infraestructura local para no depender de servicios cloud (ni de API keys).
 Se usa Qdrant en local en lugar de Qdrant Cloud. No hace falta API key: el
 cliente apunta a `http://localhost:6333`.
 
-### Opción A — docker compose (recomendado)
+### Opción A: docker compose (recomendado)
 
 Desde esta carpeta:
 
@@ -17,7 +17,7 @@ docker compose down       # parar (los datos se conservan en el volumen)
 docker compose down -v    # parar y BORRAR los datos
 ```
 
-### Opción B — docker run (equivalente)
+### Opción B: docker run (equivalente)
 
 ```bash
 docker run -d --name qdrant \
