@@ -7,13 +7,14 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from sentence_transformers import SentenceTransformer
 
+from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL
+
 load_dotenv()
 
 CHUNKS_PATH = Path("data/processed/chunks/financebench_chunks.jsonl")
-COLLECTION_NAME = "financebench_chunks"
 
-client = QdrantClient(url="http://localhost:6333")
-model = SentenceTransformer("BAAI/bge-small-en-v1.5", device="cuda")
+client = QdrantClient(url=QDRANT_URL)
+model = SentenceTransformer(EMBEDDING_MODEL, device="cuda")
 vector_size = model.get_embedding_dimension()
 
 client.recreate_collection(

@@ -2,20 +2,16 @@ from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 
-COLLECTION_NAME = "financebench_chunks"
+from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL, QUERY_PREFIX
 
-# bge-small-en-v1.5 espera este prefijo de instruccion SOLO en la query.
-# Los pasajes se indexan sin prefijo (ver src/embedding/embedding_qdrant.py).
-QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
-
-client = QdrantClient(url="http://localhost:6333")
-model = SentenceTransformer("BAAI/bge-small-en-v1.5", device="cuda")
+client = QdrantClient(url=QDRANT_URL)
+model = SentenceTransformer(EMBEDDING_MODEL, device="cuda")
 
 info = client.count(collection_name=COLLECTION_NAME, exact=True)
 print(f"Puntos en Qdrant: {info.count}")
 
 qa = pd.read_json("data/raw/financebench/financebench_open_source.jsonl", lines=True)
-query = qa.iloc[103]["question"]
+query = qa.iloc[49]["question"]
 print(f"Pregunta: {query}")
 query_vector = model.encode(QUERY_PREFIX + query, normalize_embeddings=True).tolist()
 
@@ -33,6 +29,3 @@ for r in results.points:
 
 # Resultado no tan esperado, rankea chunks no esperados, los pdfs contienen estructura
 # similar de diferentes empresas, usaremos busqueda hibrida con BM25 en /retrieval
-
-
-    
