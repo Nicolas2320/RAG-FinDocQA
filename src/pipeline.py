@@ -9,16 +9,24 @@ def answer_question(question, dense_top_k=20, final_top_k=15):
         {"doc_name": c.payload["doc_name"], "page_num": c.payload["page_num"], "text": c.payload["text"]}
         for c, _score in top
     ]
-    return generate_answer(question, chunks_para_llm)
+    answer = generate_answer(question, chunks_para_llm)
+    sources = [
+        {
+            "doc_name": c.payload["doc_name"],
+            "page_num": c.payload["page_num"],
+            "rerank_score": float(score),
+        }
+        for c, score in top
+    ]
+    return {"answer": answer, "sources": sources}
 
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) > 1:
-        pregunta = " ".join(sys.argv[1:])
-    else:
-        pregunta = input("Escribe tu pregunta: ")
-
-    respuesta = answer_question(pregunta)
+    pregunta = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else input("Escribe tu pregunta: ")
+    resultado = answer_question(pregunta)
     print("\n--- Respuesta ---")
-    print(respuesta)
+    print(resultado["answer"])
+    print("\n--- Fuentes ---")
+    for s in resultado["sources"]:
+        print(f"  {s['doc_name']} | página {s['page_num']} | score={s['rerank_score']:.3f}")
