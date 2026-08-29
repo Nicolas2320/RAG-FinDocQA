@@ -10,3 +10,14 @@ CROSS_ENCODER_MODEL = "BAAI/bge-reranker-base"
 # bge-small-en-v1.5 espera este prefijo de instrucción SOLO en la query.
 # Los pasajes se indexan sin prefijo (ver src/embedding/embedding_qdrant.py).
 QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
+
+# bge-reranker-base admite como máximo 512 tokens. Lo fijamos explícito para que
+# el CrossEncoder trunque de forma determinista y no dependa del tokenizer.
+RERANKER_MAX_LENGTH = 512
+
+
+def get_device():
+    # Usa GPU si hay CUDA disponible; si no, cae a CPU en vez de reventar.
+    import torch
+
+    return "cuda" if torch.cuda.is_available() else "cpu"

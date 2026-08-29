@@ -14,9 +14,6 @@ needed_docs = qa["doc_name"].unique().tolist()  # los 84 que sí usan las pregun
 PAGE_OFFSET = 0 
 
 def chunk_text(text, max_chars=1800, overlap=400):
-    # 1800/400 (antes 1200/200): un estado financiero denso como el
-    # "Consolidated Statement of Cash Flows" de 3M (~2000 chars) cabe casi
-    # entero en un chunk en vez de partirse a la mitad.
     chunks, start = [], 0
     while start < len(text):
         chunks.append(text[start:start + max_chars])

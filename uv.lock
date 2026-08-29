@@ -649,6 +649,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "llama-index" },
+    { name = "openai" },
     { name = "pymupdf" },
     { name = "python-dotenv" },
     { name = "qdrant-client" },
@@ -670,6 +671,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.111" },
     { name = "llama-index", specifier = ">=0.11" },
+    { name = "openai", specifier = ">=2.54.0" },
     { name = "pymupdf", specifier = ">=1.24" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
     { name = "python-dotenv", specifier = ">=1.0" },

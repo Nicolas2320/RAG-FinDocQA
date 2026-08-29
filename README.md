@@ -17,7 +17,7 @@ uv sync
 - [x] Day 1: data setup
 - [x] Day 2: parsing & chunking
 - [x] Day 3: embedding & indexing
-- [ ] Day 4: retrieval & generation
+- [x] Day 4: retrieval & generation
 - [ ] Day 5: API + UI
 - [ ] Day 6: evaluation (RAGAS)
 - [ ] Day 7: polish, Docker, CI, demo
