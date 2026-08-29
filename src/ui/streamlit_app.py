@@ -20,7 +20,6 @@ if st.button("Preguntar") and question:
         else:
             st.subheader("Respuesta")
             st.markdown(data["answer"].replace("$", "\\$"))
-            st.write(data["answer"])
             st.subheader("Fuentes recuperadas")
             for s in data["sources"]:
                 st.markdown(f"- **{s['doc_name']}**, página {s['page_num']} (score: {s['rerank_score']:.3f})")

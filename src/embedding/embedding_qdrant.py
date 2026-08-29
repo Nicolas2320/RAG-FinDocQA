@@ -1,5 +1,4 @@
 import json
-import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -7,17 +6,20 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from sentence_transformers import SentenceTransformer
 
-from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL
+from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL, get_device
 
 load_dotenv()
 
 CHUNKS_PATH = Path("data/processed/chunks/financebench_chunks.jsonl")
 
 client = QdrantClient(url=QDRANT_URL)
-model = SentenceTransformer(EMBEDDING_MODEL, device="cuda")
+model = SentenceTransformer(EMBEDDING_MODEL, device=get_device())
 vector_size = model.get_embedding_dimension()
 
-client.recreate_collection(
+if client.collection_exists(collection_name=COLLECTION_NAME):
+    client.delete_collection(collection_name=COLLECTION_NAME)
+
+client.create_collection(
     collection_name=COLLECTION_NAME,
     vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
 )

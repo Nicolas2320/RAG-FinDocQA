@@ -2,7 +2,8 @@
 
 **One-liner for the resume:** A production-style Retrieval-Augmented Generation
 system that answers questions over real SEC financial filings (10-K/10-Q),
-with hybrid retrieval, re-ranking, automated RAG evaluation, and a served API —
+with metadata-filtered dense retrieval, cross-encoder re-ranking, automated RAG
+evaluation, and a served API —
 built to demonstrate Data Engineering skills relevant to banking/financial-services roles.
 
 ## Why this project
@@ -43,7 +44,7 @@ built to demonstrate Data Engineering skills relevant to banking/financial-servi
  (3) EMBEDDING  ---------------------->  Qdrant vector DB (gold: vectors +
         |                                  metadata, filterable)
         v
- (4) RETRIEVAL (hybrid: dense + BM25)
+ (4) RETRIEVAL (metadata-filtered dense search: company / fiscal year)
         + RE-RANKING (cross-encoder)
         |
         v
@@ -67,7 +68,7 @@ built to demonstrate Data Engineering skills relevant to banking/financial-servi
 | Vector DB      | Qdrant (Docker locally, or free managed cloud tier)   |
 | Embeddings     | OpenAI `text-embedding-3-small` (or local `bge-small-en` for zero cost) |
 | Reranker       | cross-encoder `bge-reranker-base` (local, free) or Cohere Rerank |
-| Generation LLM | GPT-4o-mini or Claude Haiku, citation-constrained prompt |
+| Generation LLM | GPT-4o-mini, citation-constrained prompt |
 | API            | FastAPI                                              |
 | UI             | Streamlit                                            |
 | Evaluation     | RAGAS                                                |
@@ -84,10 +85,10 @@ built to demonstrate Data Engineering skills relevant to banking/financial-servi
   fiscal year, page). Write chunks to `data/processed/chunks/*.jsonl`.
 - **Day 3 — Embedding & indexing.** Batch-embed chunks, upsert into Qdrant
   with metadata payload for filtering (e.g. filter by company or filing type).
-- **Day 4 — Retrieval & generation.** Build hybrid retriever (dense + BM25),
-  add cross-encoder re-ranking, wire up the LLM generation step with a
-  prompt that forces citations back to page numbers. Sanity-check on ~10
-  FinanceBench questions by hand.
+- **Day 4 — Retrieval & generation.** Build the retriever (metadata-filtered
+  dense search by company / fiscal year), add cross-encoder re-ranking, wire
+  up the LLM generation step with a prompt that forces citations back to page
+  numbers. Sanity-check on ~10 FinanceBench questions by hand.
 - **Day 5 — Serving.** FastAPI `/query` endpoint (question in, answer +
   sources out). Minimal Streamlit UI on top for a live demo / recording.
 - **Day 6 — Evaluation.** Run the full FinanceBench QA set through the
@@ -101,7 +102,7 @@ built to demonstrate Data Engineering skills relevant to banking/financial-servi
 ## Resume bullets (draft — fill in your real numbers after Day 6)
 
 - "Built a Retrieval-Augmented Generation system over SEC financial filings
-  (FinanceBench corpus), implementing hybrid dense+sparse retrieval with
+  (FinanceBench corpus), implementing metadata-filtered dense retrieval with
   cross-encoder re-ranking on Qdrant; evaluated with RAGAS, achieving
   __% faithfulness and __% context precision on a 150-question benchmark."
 - "Designed an end-to-end unstructured-data pipeline (ingestion → chunking
