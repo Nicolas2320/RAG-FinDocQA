@@ -57,7 +57,7 @@ def build_metadata_filter(question, known_companies):
     # Construye el filtro de metadata de Qdrant a partir de la empresa y el año
     # detectados en la pregunta. Solo añade condiciones para lo que se detecto;
     # con `must` todas las condiciones presentes deben cumplirse (AND).
-    # Devuelve (filtro | None, company, year) — company/year sirven para loguear.
+    # Devuelve (filtro | None, company, year) - company/year sirven para loguear.
     company = extract_company(question, known_companies)
     year = extract_year(question)
     conditions = []
@@ -77,12 +77,28 @@ def filtered_dense_search(question, known_companies, top_k=50):
     # Devuelve la lista de puntos (con .score y .payload) para pasar al reranker.
     query_filter, company, year = build_metadata_filter(question, known_companies)
     query_vector = model.encode(QUERY_PREFIX + question, normalize_embeddings=True).tolist()
+
     results = client.query_points(
         collection_name=COLLECTION_NAME,
         query=query_vector,
         limit=top_k,
         query_filter=query_filter,
     ).points
+
+    # Fallback: si el filtro empresa+año no devuelve nada (preguntas de pronóstico
+    # donde el año de la pregunta no coincide con el doc_period real), relaja a
+    # solo empresa. Si el filtro con año SÍ trae resultados, se queda con esos
+    # (evita mezclar documentos de otros años cuando el filtro estricto funciona).
+    if not results and company and year:
+        fallback_filter = Filter(must=[FieldCondition(key="company", match=MatchValue(value=company))])
+        results = client.query_points(
+            collection_name=COLLECTION_NAME,
+            query=query_vector,
+            limit=top_k,
+            query_filter=fallback_filter,
+        ).points
+        print(f"[fallback aplicado: se descartó el filtro de año, solo empresa={company!r}]")
+
     print(f"[empresa={company!r}, año={year!r}, filtro_aplicado={query_filter is not None}]")
     return results
 
