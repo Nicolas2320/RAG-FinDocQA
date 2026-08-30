@@ -1,4 +1,3 @@
-# src/generation/generate_answer.py
 import os
 
 from dotenv import load_dotenv
@@ -26,6 +25,10 @@ usando el nombre de documento y la página que aparecen en la cabecera del fragm
 
 
 def format_context(chunks):
+    # Serializa los chunks recuperados en un solo bloque de texto para el prompt.
+    # Cada fragmento lleva una cabecera numerada con doc_name y page_num: es la
+    # info que el system prompt le pide al modelo para construir la cita
+    # [Fuente: NOMBRE_DOCUMENTO, página X].
     bloques = [
         f"[{i}] (documento: {c['doc_name']}, página: {c['page_num']})\n{c['text']}"
         for i, c in enumerate(chunks, start=1)
@@ -34,12 +37,17 @@ def format_context(chunks):
 
 
 def generate_answer(question, chunks):
+    # Paso final del RAG: pide al LLM una respuesta anclada solo en los chunks
+    # ya recuperados y reordenados.
     if not chunks:
         return "No se recuperó ningún fragmento para responder la pregunta."
 
+    # Arma el mensaje del usuario: contexto (fragmentos) + la pregunta.
     context = format_context(chunks)
     user_prompt = f"Fragmentos:\n\n{context}\n\nPregunta: {question}"
 
+    # Llamada al Chat Completions API. SYSTEM_PROMPT fija las reglas.
+    # El tope de tokens acota el coste y la longitud de la respuesta.
     try:
         response = client_llm.chat.completions.create(
             model=GENERATION_MODEL,
@@ -50,6 +58,7 @@ def generate_answer(question, chunks):
             ],
         )
     except OpenAIError as e:
+        # Fallo de red/API/credenciales
         return f"Error al llamar al modelo de generación: {e}"
 
     return response.choices[0].message.content
