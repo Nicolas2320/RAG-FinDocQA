@@ -1,9 +1,10 @@
 # Configuración compartida del sistema RAG.
 # Fuente para los valores que usan los scripts de embedding,
 # retrieval y la API.
+import os
 
 COLLECTION_NAME = "financebench_chunks"
-QDRANT_URL = "http://localhost:6333"
+QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 EMBEDDING_MODEL = "BAAI/bge-small-en-v1.5"
 CROSS_ENCODER_MODEL = "BAAI/bge-reranker-base"
 

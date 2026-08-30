@@ -1,8 +1,8 @@
 # Orquestador del RAG de punta a punta: encadena las tres etapas
 # (retrieval denso -> rerank -> generación) que viven en sus propios módulos.
+from src.generation.generate_answer import generate_answer
 from src.retrieval.filtered_search import filtered_dense_search, known_companies
 from src.retrieval.rerank import rerank
-from src.generation.generate_answer import generate_answer
 
 # Defaults del pipeline. Se exponen como constantes para que otros módulos
 # (p. ej. la API en src/api/main.py) los reutilicen en vez de duplicar los valores.

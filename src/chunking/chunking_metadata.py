@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
-import pymupdf
+
 import pandas as pd
+import pymupdf
 
 RAW = Path("data/raw/financebench")
 OUT = Path("data/processed/chunks")
@@ -62,8 +63,7 @@ for doc_name in docs:
             
 # Guardar los chunks
 with open(OUT / "financebench_chunks.jsonl", "w") as f:
-    for r in records:
-        f.write(json.dumps(r) + "\n")
+    f.writelines(json.dumps(r) + "\n" for r in records)
 
 print(f"{len(records)} chunks de {len(docs) - len(missing)} documentos")
 if missing:

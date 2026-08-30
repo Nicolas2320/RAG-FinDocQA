@@ -1,9 +1,11 @@
 # Front-end mínimo en Streamlit. Es un cliente HTTP del API
 # (src/api/main.py), que debe estar corriendo en localhost:8000.
+import os
+
 import requests
 import streamlit as st
 
-API_URL = "http://localhost:8000/query"
+API_URL = os.getenv("API_URL", "http://localhost:8000/query")
 
 st.set_page_config(page_title="FinDocQA", page_icon="📊")
 st.title("FinDocQA: Financial Document Q&A")

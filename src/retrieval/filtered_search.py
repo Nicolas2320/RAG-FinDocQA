@@ -5,10 +5,16 @@ import re
 import pandas as pd
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
-from qdrant_client.models import Filter, FieldCondition, MatchValue
+from qdrant_client.models import FieldCondition, Filter, MatchValue
 from sentence_transformers import SentenceTransformer
 
-from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL, QUERY_PREFIX, get_device
+from src.config import (
+    COLLECTION_NAME,
+    EMBEDDING_MODEL,
+    QDRANT_URL,
+    QUERY_PREFIX,
+    get_device,
+)
 
 load_dotenv()
 

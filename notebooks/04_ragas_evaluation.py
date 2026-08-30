@@ -19,11 +19,10 @@ if "langchain_community.chat_models.vertexai" not in sys.modules:
 import pandas as pd
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
-from sentence_transformers import SentenceTransformer
-
 from ragas import EvaluationDataset, evaluate
 from ragas.embeddings import BaseRagasEmbeddings
 from ragas.metrics import AnswerRelevancy, ContextPrecision, ContextRecall, Faithfulness
+from sentence_transformers import SentenceTransformer
 
 from src.config import EMBEDDING_MODEL, get_device
 from src.generation.generate_answer import generate_answer

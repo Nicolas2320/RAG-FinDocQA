@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 
 chunks = pd.read_json("data/processed/chunks/financebench_chunks.jsonl", lines=True)
@@ -36,8 +38,6 @@ print(f"Evidencia encontrada en el chunk correcto: {hits}/{total_evidencias} ({h
 
 # Output:
 # Evidencia encontrada en el chunk correcto: 148/189 (78%)
-
-import re
 
 def normalize(text):
     return re.sub(r"\s+", " ", text).strip().lower()

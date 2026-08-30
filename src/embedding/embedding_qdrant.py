@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import Distance, PointStruct, VectorParams
 from sentence_transformers import SentenceTransformer
 
 from src.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL, get_device
@@ -29,7 +29,8 @@ client.create_collection(
     vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
 )
 
-chunks = [json.loads(line) for line in open(CHUNKS_PATH)]
+with open(CHUNKS_PATH, encoding="utf-8") as f:
+    chunks = [json.loads(line) for line in f]
 print(f"Total de chunks: {len(chunks)}")
 
 # Procesa los chunks en lotes: cada iteracion embebe BATCH_SIZE textos de una vez

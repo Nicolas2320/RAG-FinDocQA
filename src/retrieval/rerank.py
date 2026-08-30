@@ -1,10 +1,10 @@
 # Cross-encoder (bge-reranker-base, usado aquí): mete la pregunta y el chunk juntos como un solo input ((question, text)) en una sola pasada por el transformer, permitiendo que cada palabra de la pregunta atienda directamente a cada palabra del chunk. Esto da un score de relevancia mucho más preciso, pero es caro: no se puede precalcular (tienes que correr el modelo en el momento de cada pregunta) ni escala a millones de documentos.
 
-import pandas as pd
 from sentence_transformers import CrossEncoder
 
 from src.config import CROSS_ENCODER_MODEL, RERANKER_MAX_LENGTH, get_device
-from src.retrieval.filtered_search import filtered_dense_search, known_companies
+
+# from src.retrieval.filtered_search import filtered_dense_search, known_companies
 
 reranker = CrossEncoder(CROSS_ENCODER_MODEL, max_length=RERANKER_MAX_LENGTH, device=get_device())
 
