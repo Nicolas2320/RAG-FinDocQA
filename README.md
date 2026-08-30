@@ -72,5 +72,5 @@ streamlit run src/ui/streamlit_app.py
 - [x] Day 3: embedding & indexing
 - [x] Day 4: retrieval & generation
 - [x] Day 5: API + UI
-- [ ] Day 6: evaluation (RAGAS)
+- [x] Day 6: evaluation (RAGAS)
 - [ ] Day 7: polish, Docker, CI, demo
