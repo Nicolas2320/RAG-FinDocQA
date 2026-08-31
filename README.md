@@ -23,7 +23,7 @@ uv sync --extra dev    # + pytest / ruff
 cp .env.example .env
 # then edit .env and set:
 #   OPENAI_API_KEY=sk-...
-#   OPENAI_MODEL=gpt-4o-mini
+#   OPENAI_MODEL=gpt-version
 ```
 
 ### 3. Data
