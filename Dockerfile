@@ -15,13 +15,15 @@ ENV UV_COMPILE_BYTECODE=1 \
 #    Mientras no cambiemos pyproject.toml/uv.lock, Docker reusa esta capa
 #    en cache y no vuelve a bajar/instalar todo cada vez que cambias un .py.
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-install-project --no-dev
 
 # 2) Copiamos el código fuente.
 COPY src/ src/
 
 # 3) Instalamos el propio proyecto
-RUN uv sync --frozen --no-dev
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
 
 # El entorno virtual que crea uv queda en /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
