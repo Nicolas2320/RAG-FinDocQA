@@ -1,6 +1,11 @@
 # Known limitations
 
-## Table-flattening ambiguity in PDF text extraction (Day 4)
+Both pipelines (`src/` hand-written and `rag_langchain/` LangChain) share every
+limitation below, they use the same extraction call (`page.get_text()` /
+`PyMuPDFLoader`), the same embedding model, the same reranker, and the same
+generation prompt. Nothing here is specific to one implementation.
+
+## Table-flattening ambiguity in PDF text extraction
 
 Some 10-K pages present financial data in multi-column tables where several
 distinct metrics (e.g. "Property, Plant and Equipment - net" and "Capital
@@ -26,7 +31,7 @@ appears before the "Capital Spending" header, even though visually Capital
 Spending is the column closer to the metric asked about. When asked "What is
 the FY2018 capital expenditure amount for 3M?", the generation step initially
 answered **$8,738 million** (the PP&E - net figure) instead of the correct
-**$1,577 million** (the Capital Spending figure) — not a hallucination, but a
+**$1,577 million** (the Capital Spending figure), not a hallucination, but a
 misread of a genuinely ambiguous flattened table. The correct figure is also
 present, unambiguously, in the primary Consolidated Statement of Cash Flows
 (page index 59), but that page ranks lower in retrieval because its narrower,
@@ -41,7 +46,7 @@ Two compounding effects, isolated independently:
 1. **Retrieval bias toward narrative text.** Both the bi-encoder (BAAI/bge-small-en-v1.5)
    and the cross-encoder reranker (BAAI/bge-reranker-base) score natural-language
    narrative passages higher than dense numeric/tabular fragments, regardless of
-   chunk size or added context — confirmed by testing an isolated, noise-free
+   chunk size or added context, confirmed by testing an isolated, noise-free
    snippet of the correct answer, which still scored lower (0.0004) than a full,
    noisy narrative page (0.96).
 2. **Lossy table-to-text flattening.** `get_text()` extracts text in a reading
@@ -50,20 +55,13 @@ Two compounding effects, isolated independently:
    reliably distinguished from an adjacent, similarly-labeled value without
    seeing the original grid.
 
-### Status
+## English-only retrieval and non-English questions degrade badly
 
-Not fixed in this MVP — scoped out to keep the 1-week timeline. Both retrieval
-(metadata filter + dense search + rerank) and generation (strict grounding +
-citation prompting) work correctly for narrative-style evidence (validated end
-to end on 3M, Best Buy, and MGM Resorts test questions); this failure mode is
-specific to multi-column numeric tables.
-
-### Future work
-
-- Structure-aware table extraction (e.g. `pdfplumber`, `camelot`, or
-  `unstructured`) to preserve row/column relationships instead of raw text flow.
-- Multimodal extraction: render the page as an image and let a vision-capable
-  LLM read the table directly, preserving its visual layout.
-- A generation-time safeguard: instruct the LLM to flag low confidence when a
-  retrieved chunk contains multiple numeric columns with similar labels, rather
-  than silently picking one.
+`BAAI/bge-small-en-v1.5` and `BAAI/bge-reranker-base` are monolingual English
+models. A question asked in another language (e.g. Spanish) against the
+English filing corpus has no learned cross-lingual alignment, the
+query-to-passage similarity is essentially noise, and the reranker degrades the
+signal a second time. The generation step (OpenAI) is multilingual and handles
+this fine; the bottleneck is strictly retrieval + rerank. The English
+instruction prefix (`QUERY_PREFIX`) prepended to a non-English question makes
+the input even further out-of-distribution.

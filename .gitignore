@@ -9,3 +9,4 @@ data/processed/*
 .qdrant_storage/
 *.log
 .ragas_cache/
+FRAMEWORK_COMPARISON.md
