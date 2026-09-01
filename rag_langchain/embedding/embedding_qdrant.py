@@ -8,7 +8,13 @@ from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 
-from rag_langchain.config import COLLECTION_NAME, EMBEDDING_MODEL, QDRANT_URL, QUERY_PREFIX, get_device
+from rag_langchain.config import (
+    COLLECTION_NAME,
+    EMBEDDING_MODEL,
+    QDRANT_URL,
+    QUERY_PREFIX,
+    get_device,
+)
 
 load_dotenv()
 

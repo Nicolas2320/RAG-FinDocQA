@@ -25,19 +25,26 @@ from ragas.embeddings import BaseRagasEmbeddings
 from ragas.metrics import AnswerRelevancy, ContextPrecision, ContextRecall, Faithfulness
 from sentence_transformers import SentenceTransformer
 
+# --- Pipeline LangChain (rag_langchain/) ---
+from rag_langchain.generation.generate_answer import (
+    generate_answer as generate_answer_langchain,
+)
+from rag_langchain.retrieval.filtered_search import (
+    filtered_dense_search as filtered_dense_search_langchain,
+)
+from rag_langchain.retrieval.filtered_search import (
+    known_companies as known_companies_langchain,
+)
+from rag_langchain.retrieval.rerank import rerank as rerank_langchain
 from src.config import EMBEDDING_MODEL, get_device
 
 # --- Pipeline manual (src/) ---
 from src.generation.generate_answer import generate_answer as generate_answer_manual
-from src.retrieval.filtered_search import filtered_dense_search as filtered_dense_search_manual
+from src.retrieval.filtered_search import (
+    filtered_dense_search as filtered_dense_search_manual,
+)
 from src.retrieval.filtered_search import known_companies as known_companies_manual
 from src.retrieval.rerank import rerank as rerank_manual
-
-# --- Pipeline LangChain (rag_langchain/) ---
-from rag_langchain.generation.generate_answer import generate_answer as generate_answer_langchain
-from rag_langchain.retrieval.filtered_search import filtered_dense_search as filtered_dense_search_langchain
-from rag_langchain.retrieval.filtered_search import known_companies as known_companies_langchain
-from rag_langchain.retrieval.rerank import rerank as rerank_langchain
 
 load_dotenv()
 

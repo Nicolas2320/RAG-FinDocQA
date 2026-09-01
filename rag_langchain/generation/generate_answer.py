@@ -1,6 +1,7 @@
 import os
 
 from dotenv import load_dotenv
+from langchain_core.exceptions import LangChainException
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 
@@ -37,14 +38,19 @@ def format_context(docs):
     ]
     return "\n\n".join(bloques)
 
-
 def generate_answer(question, docs):
     if not docs:
         return "No se recuperó ningún fragmento para responder la pregunta."
+        
     context = format_context(docs)
     user_prompt = f"Fragmentos:\n\n{context}\n\nPregunta: {question}"
+    
     try:
-        response = get_llm().invoke([SystemMessage(content=SYSTEM_PROMPT), HumanMessage(content=user_prompt)])
-    except Exception as e:
+        response = get_llm().invoke([
+            SystemMessage(content=SYSTEM_PROMPT), 
+            HumanMessage(content=user_prompt)
+        ])
+    except LangChainException as e:
         return f"Error al llamar al modelo de generación: {e}"
+        
     return response.content

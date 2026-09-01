@@ -1,5 +1,8 @@
 from rag_langchain.generation.generate_answer import generate_answer
-from rag_langchain.retrieval.filtered_search import filtered_dense_search, known_companies
+from rag_langchain.retrieval.filtered_search import (
+    filtered_dense_search,
+    known_companies,
+)
 from rag_langchain.retrieval.rerank import rerank
 
 DENSE_TOP_K_DEFAULT = 50
