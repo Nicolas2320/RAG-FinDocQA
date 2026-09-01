@@ -145,7 +145,7 @@ El `SYSTEM_PROMPT` de citación (responder solo con los fragmentos dados, admiti
 
 ## Day 5 — `src/api/main.py` + `src/ui/streamlit_app.py`
 
-FastAPI con `/health` y `/query`, esquemas Pydantic para validar entrada/salida. **Nota de consistencia a corregir:** los defaults de `QueryRequest` (`dense_top_k=20`, `final_top_k=15`) no coinciden con los defaults de `answer_question()` en `pipeline.py` (`dense_top_k=50`, `final_top_k=10`) — hoy el comportamiento cambia según si invocas por CLI o por API sin especificar esos campos. Vale la pena unificarlos (idealmente que la API herede los defaults de `pipeline.py` en vez de redefinir los suyos).
+FastAPI con `/health` y `/query`, esquemas Pydantic para validar entrada/salida. **Nota de consistencia a corregir:** los defaults de `QueryRequest` (`dense_top_k=50`, `final_top_k=10`) no coinciden con los defaults de `answer_question()` en `pipeline.py` (`dense_top_k=50`, `final_top_k=10`) — hoy el comportamiento cambia según si invocas por CLI o por API sin especificar esos campos. Vale la pena unificarlos (idealmente que la API herede los defaults de `pipeline.py` en vez de redefinir los suyos).
 
 - **LangChain**: la herramienta con nombre propio para esta capa es **LangServe** — toma una chain LCEL y genera rutas FastAPI automáticamente (`/invoke`, `/batch`, `/stream`, playground) a partir del esquema de entrada/salida de la chain, sin escribir `QueryRequest`/`QueryResponse` a mano.
 - **LlamaIndex**: no tiene una herramienta de auto-serve tan prominente — el patrón típico es exactamente lo que hace este proyecto: envolver `query_engine.query()` a mano en un FastAPI propio.

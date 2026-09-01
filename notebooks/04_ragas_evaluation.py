@@ -84,7 +84,7 @@ sample = qa if SAMPLE_SIZE is None else qa.sample(n=SAMPLE_SIZE, random_state=42
 
 rows = []
 for _, row in sample.iterrows():
-    candidatos = filtered_dense_search(row["question"], known_companies, top_k=20)
+    candidatos = filtered_dense_search(row["question"], known_companies, top_k=50)
     top = rerank(row["question"], candidatos, top_k=15)
     contexts = [c.payload["text"] for c, _score in top]
     chunks_para_llm = [
