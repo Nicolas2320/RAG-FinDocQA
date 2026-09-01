@@ -86,14 +86,16 @@ metrics = [Faithfulness(), AnswerRelevancy(strictness=1), ContextPrecision(), Co
 SAMPLE_SIZE = 10
 qa = pd.read_json("data/raw/financebench/financebench_open_source.jsonl", lines=True)
 sample = qa if SAMPLE_SIZE is None else qa.sample(n=SAMPLE_SIZE, random_state=42)
+top_k_dense = 50
+top_k_rerank = 10
 
 
 def run_manual(sample):
     rows, elapsed = [], []
     for _, row in sample.iterrows():
         t0 = time.perf_counter()
-        candidatos = filtered_dense_search_manual(row["question"], known_companies_manual, top_k=20)
-        top = rerank_manual(row["question"], candidatos, top_k=15)
+        candidatos = filtered_dense_search_manual(row["question"], known_companies_manual, top_k=top_k_dense)
+        top = rerank_manual(row["question"], candidatos, top_k=top_k_rerank)
         contexts = [c.payload["text"] for c, _score in top]
         chunks_para_llm = [
             {"doc_name": c.payload["doc_name"], "page_num": c.payload["page_num"], "text": c.payload["text"]}
@@ -115,8 +117,8 @@ def run_langchain(sample):
     rows, elapsed = [], []
     for _, row in sample.iterrows():
         t0 = time.perf_counter()
-        candidatos = filtered_dense_search_langchain(row["question"], known_companies_langchain, top_k=20)
-        top = rerank_langchain(row["question"], candidatos, top_k=15)
+        candidatos = filtered_dense_search_langchain(row["question"], known_companies_langchain, top_k=top_k_dense)
+        top = rerank_langchain(row["question"], candidatos, top_k=top_k_rerank)
         docs = [doc for doc, _score in top]
         contexts = [doc.page_content for doc in docs]
         answer = generate_answer_langchain(row["question"], docs)
